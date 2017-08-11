@@ -2,12 +2,12 @@ package route
 
 import (
 	"net/http"
+	"fmt"
+	"github.com/go-xorm/xorm"
 )
 
-func Home(res http.ResponseWriter, req *http.Request) {
+func Home(res http.ResponseWriter, req *http.Request, engine *xorm.Engine) {
 	res.Write([]byte("Home Page"))
+	fmt.Println(engine)
 }
 
-func Doc(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Doc Page"))
-}
