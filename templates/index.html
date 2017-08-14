@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>多参仪全功能控制平台</title>
+</head>
+<body>
+	<h1>多参仪全功能控制平台接口说明</h1>
+
+	<h2>一.功能项管理</h2>
+	<h3>1.添加功能项</h3>
+	<p>向接口 <a href="/api/function">/api/function</a> POST json数据就可以添加功能项，json格式是这样的</p>
+	{
+		"serial_number":"1001",
+		"function_type":0,
+		"function_name":"心电测量"
+	}
+	<h3>2.获取所有功能项</h3>
+	<p>GET接口 <a href="/api/function">/api/function</a> 就可以获取所有功能项</p>
+
+
+	<h2>二.license管理</h2>
+	<h3>1.添加license</h3>
+	<p>向接口 <a href="/api/license">/api/license</a> POST json数据就可以添加license，json格式是这样的</p>
+	{
+		"functions":[
+			{"function_number":"1001","function_name":"心电图"},
+			{"function_number":"1002","function_name":"血糖"},
+			{"function_number":"1003","function_name":"血脂"}
+		],
+		"amount":3
+	}
+	<h3>2.获取所有license</h3>
+	<p>GET接口 <a href="/api/license">/api/license</a> 就可以获取所有功能项</p>
+
+
+
+	<h2>三.功能配置管理</h2>
+	<h3>1.添加功能配置</h3>
+	<p>向接口 <a href="/api/config">/api/config</a> POST json数据就可以添加功能项，json格式是这样的
+	{
+	"serial_number":"1001",
+	"function_type":0,
+	"function_name":"心电测量"
+	}
+	</p>
+	<h3>2.获取所有功能配置</h3>
+	<p>GET接口 <a href="/api/config">/api/config</a> 就可以获取所有功能项</p>
+
+	<h2>四.license校验，有两种方式</h2>
+	<h3>1.发送GET请求</h3>
+	<p>GET方式调用接口 <a href="/api/verify">/api/verify</a> url后传递license和sn参数即可
+	如：<a href="/api/verify?license=DFJT-TDRO-Q4I3-W7CU&sn=123456abcdef">/api/verify?license=DFJT-TDRO-Q4I3-W7CU&sn=123456abcdef</a>
+	</p>
+	<h3>2.发送POST请求</h3>
+	<p>向接口 <a href="/api/verify">/api/verify</a> POST json数据即可，json格式是这样子</p>
+	{
+		"license":"DFJT-TDRO-Q4I3-W7CU",
+		"sn":"1234567zbc"
+	}
+
+</body>
+</html>

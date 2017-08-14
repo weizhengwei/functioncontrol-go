@@ -10,9 +10,12 @@ import (
 	"./model"
 	_ "github.com/go-sql-driver/mysql"
     "github.com/go-xorm/xorm"
+    "github.com/elgs/gostrgen"
 )
 
 var engine *xorm.Engine
+var BIND_ADDR = "localhost:9090"
+var logger *log.Logger
 
 func init() {
 	logfile, err := os.OpenFile("test.log", os.O_APPEND|os.O_RDWR|os.O_CREATE, 0777)
@@ -26,7 +29,7 @@ func init() {
         os.Stdout,
     }
     fileAndStdoutWriter := io.MultiWriter(writers...)
-    logger := log.New(fileAndStdoutWriter, "\r\n", log.Ldate|log.Ltime|log.Llongfile)
+    logger = log.New(fileAndStdoutWriter, "", log.Ldate|log.Ltime|log.Llongfile)
     logger.Println("hello")
     logger.Println("oh....")
 }
@@ -51,20 +54,62 @@ func initxorm() {
 		fmt.Printf("Fail to sync database: %v\n", err2)
 	}
 	fmt.Println("init OK")
-
 }
 
-func home(res http.ResponseWriter, req *http.Request) {
-	route.Home(res, req, engine)
+func Home(res http.ResponseWriter, req *http.Request) {
+	res.Write([]byte("Doc Page"))
 }
 
 func Doc(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("Doc Page"))
 }
 
+func HandleLicense(res http.ResponseWriter, req *http.Request) {
+	route.License(res, req, engine)
+}
+
+func HandleConfig(res http.ResponseWriter, req *http.Request) {
+	route.Config(res, req, engine)
+}
+
+func HandleVerify(res http.ResponseWriter, req *http.Request) {
+	route.Verify(res, req, engine)
+}
+
 func main() {
 	initxorm()
-	http.HandleFunc("/", home)
+	http.HandleFunc("/", Home)
 	http.HandleFunc("/doc", Doc)
-	http.ListenAndServe(":9090", nil)
+	http.HandleFunc("/api/license", HandleLicense)
+	http.HandleFunc("/api/config", HandleConfig)
+	http.HandleFunc("/api/verify", HandleVerify)
+	logger.Println("Server Start At ", BIND_ADDR)
+	err := http.ListenAndServe(BIND_ADDR, nil)
+	if err != nil {
+		logger.Println("Start Server Failed:", err)
+	}
+}
+
+func GenerateRandomString() (string,error) {
+	charsToGenerate := 16
+	charSet := gostrgen.Upper | gostrgen.Digit
+	includes := "" //"[]{}<>" // optionally include some additional letters
+	excludes := "Ol"     //exclude big 'O' and small 'l' to avoid confusion with zero and one.
+
+	str, err := gostrgen.RandGen(charsToGenerate, charSet, includes, excludes)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	var ret string
+	var k int
+	for j := 0; j < 4; j++ {
+		k = j*4
+		if j < 3 {
+			ret += str[k:k+4]+"-"
+		}else{
+			ret += str[k:k+4]
+		}
+	}
+	return ret, nil
 }
