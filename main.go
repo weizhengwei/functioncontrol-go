@@ -40,10 +40,17 @@ func initxorm() {
 func Home(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("Home Page"))
 	util.GetLoggerInstance().Println("Home")
+	fmt.Println("Home fmt")
 }
 
 func Doc(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("Doc Page"))
+	util.GetLoggerInstance().Println("Doc")
+	fmt.Println("Doc fmt")
+}
+
+func HandleFunction(res http.ResponseWriter, req *http.Request) {
+	route.Function(res, req, engine)
 }
 
 func HandleLicense(res http.ResponseWriter, req *http.Request) {
@@ -62,6 +69,7 @@ func main() {
 	initxorm()
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/doc", Doc)
+	http.HandleFunc("/api/function", HandleFunction)
 	http.HandleFunc("/api/license", HandleLicense)
 	http.HandleFunc("/api/config", HandleConfig)
 	http.HandleFunc("/api/verify", HandleVerify)

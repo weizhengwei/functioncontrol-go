@@ -1,0 +1,8 @@
+{
+	"functions":[
+		{"FunctionNumber":"1001","FunctionName":"心电图"},
+		{"FunctionNumber":"1002","FunctionName":"血糖"},
+		{"FunctionNumber":"1003","FunctionName":"血脂"}
+	],
+	"amount":3
+}
