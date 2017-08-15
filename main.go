@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"log"
-	"io"
 	"os"
 	"./route"
 	"./model"
+	"./util"
 	_ "github.com/go-sql-driver/mysql"
     "github.com/go-xorm/xorm"
     "github.com/elgs/gostrgen"
@@ -15,24 +14,6 @@ import (
 
 var engine *xorm.Engine
 var BIND_ADDR = "localhost:9090"
-var logger *log.Logger
-
-func init() {
-	logfile, err := os.OpenFile("test.log", os.O_APPEND|os.O_RDWR|os.O_CREATE, 0777)
-    if err != nil {
-        fmt.Printf("%s\r\n", err.Error())
-        os.Exit(-1)
-    }
-    defer logfile.Close()
-    writers := []io.Writer{
-        logfile,
-        os.Stdout,
-    }
-    fileAndStdoutWriter := io.MultiWriter(writers...)
-    logger = log.New(fileAndStdoutWriter, "", log.Ldate|log.Ltime|log.Llongfile)
-    logger.Println("hello")
-    logger.Println("oh....")
-}
 
 func initxorm() {
 	var err error
@@ -57,7 +38,8 @@ func initxorm() {
 }
 
 func Home(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Doc Page"))
+	res.Write([]byte("Home Page"))
+	util.GetLoggerInstance().Println("Home")
 }
 
 func Doc(res http.ResponseWriter, req *http.Request) {
@@ -83,10 +65,11 @@ func main() {
 	http.HandleFunc("/api/license", HandleLicense)
 	http.HandleFunc("/api/config", HandleConfig)
 	http.HandleFunc("/api/verify", HandleVerify)
-	logger.Println("Server Start At ", BIND_ADDR)
+
+	util.GetLoggerInstance().Println("Server Start At", BIND_ADDR)
 	err := http.ListenAndServe(BIND_ADDR, nil)
 	if err != nil {
-		logger.Println("Start Server Failed:", err)
+		util.GetLoggerInstance().Println("Start Server Failed:", err)
 	}
 }
 
