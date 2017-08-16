@@ -9,7 +9,7 @@ import (
 	"./util"
 	_ "github.com/go-sql-driver/mysql"
     "github.com/go-xorm/xorm"
-    "github.com/elgs/gostrgen"
+   
 )
 
 var engine *xorm.Engine
@@ -79,28 +79,4 @@ func main() {
 	if err != nil {
 		util.GetLoggerInstance().Println("Start Server Failed:", err)
 	}
-}
-
-func GenerateRandomString() (string,error) {
-	charsToGenerate := 16
-	charSet := gostrgen.Upper | gostrgen.Digit
-	includes := "" //"[]{}<>" // optionally include some additional letters
-	excludes := "Ol"     //exclude big 'O' and small 'l' to avoid confusion with zero and one.
-
-	str, err := gostrgen.RandGen(charsToGenerate, charSet, includes, excludes)
-	if err != nil {
-		fmt.Println(err)
-		return "", err
-	}
-	var ret string
-	var k int
-	for j := 0; j < 4; j++ {
-		k = j*4
-		if j < 3 {
-			ret += str[k:k+4]+"-"
-		}else{
-			ret += str[k:k+4]
-		}
-	}
-	return ret, nil
 }
